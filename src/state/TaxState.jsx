@@ -12,6 +12,8 @@ function TaxStateProvider({children}) {
     const [csaladi, setCsaladi] = useState(false);
     const [dateOfWedding, setDateOfWedding] = useState("");
     const [validMarriage, setValidMarriage] = useState(false);
+    const [numOfDependents, setNumOfDependents] = useState(0);
+    const [numOfEligibleDependents, setNumOfEligibleDependents] = useState(0);
 
     const changeGrossSalary = (value) => {
         setGrossSalary(value);
@@ -61,6 +63,15 @@ function TaxStateProvider({children}) {
         if (validMarriage && frissHazasok) {
             juttatasok += 5000;
         }
+        console.log("Num of eligible dependents: ", numOfEligibleDependents)
+        if (numOfEligibleDependents === 1) {
+            juttatasok += 10000 * numOfDependents;
+        } else if (numOfEligibleDependents === 2) {
+            juttatasok += 20000 * numOfDependents;
+        } else if (numOfEligibleDependents >= 3) {
+            juttatasok += 33000 * numOfDependents;
+        }
+        console.log(juttatasok);
         setNetSalary(grossSalary - ado + juttatasok);
     }
 
@@ -82,11 +93,27 @@ function TaxStateProvider({children}) {
         }
     }
 
+    const changeGrossSalaryByPercentage = (percentage) => {
+        return () => {
+            setGrossSalary(grossSalary * percentage / 100);
+        }
+    }
+
+    const changeNumOfDependents = (value) => {
+        setNumOfDependents(value);
+        console.log(value);
+    }
+
+    const changeNumOfEligibleDependents = (value) => {
+        setNumOfEligibleDependents(value);
+        console.log(value)
+    }
+
     useEffect(() => {
         calculateNetSalary();
-    }, [grossSalary, SZJA, frissHazasok, szemelyi, csaladi, calculateNetSalary, validMarriage, checkBoxes]);
+    }, [grossSalary, SZJA, frissHazasok, szemelyi, csaladi, calculateNetSalary, validMarriage, checkBoxes, numOfDependents]);
 
-    const context = { name, grossSalary, netSalary, SZJA, frissHazasok, szemelyi, csaladi, changeGrossSalary, checkBoxes, changeName, validateMarriage, validMarriage };
+    const context = { name, grossSalary, netSalary, SZJA, frissHazasok, szemelyi, csaladi, changeGrossSalary, checkBoxes, changeName, validateMarriage, validMarriage, changeGrossSalaryByPercentage, changeNumOfDependents, numOfDependents, changeNumOfEligibleDependents };
     return <TaxStateContext.Provider value={context}>{children}</TaxStateContext.Provider>
 }
 
