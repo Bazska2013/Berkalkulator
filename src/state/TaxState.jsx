@@ -64,9 +64,9 @@ function TaxStateProvider({children}) {
             juttatasok += 5000;
         }
         console.log("Num of eligible dependents: ", numOfEligibleDependents)
-        if (numOfEligibleDependents === 1) {
+        if (numOfEligibleDependents == 1) {
             juttatasok += 10000 * numOfDependents;
-        } else if (numOfEligibleDependents === 2) {
+        } else if (numOfEligibleDependents == 2) {
             juttatasok += 20000 * numOfDependents;
         } else if (numOfEligibleDependents >= 3) {
             juttatasok += 33000 * numOfDependents;
