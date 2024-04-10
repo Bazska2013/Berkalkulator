@@ -3,6 +3,21 @@ import {createContext, useContext, useEffect, useState} from "react";
 const TaxStateContext = createContext();
 
 function TaxStateProvider({children}) {
+    const [family, setFamily] = useState({
+        1: {
+            id: 1,
+            name: "Name",
+            grossSalary: 250000,
+            netSalary: 0,
+            SZJA: 0,
+            frissHazasok: false,
+            szemelyi: 0,
+            csaladi: false,
+            validMarriage: false,
+            numOfDependents: 0,
+            numOfEligibleDependents: 0
+        }
+    });
     const [name, setName] = useState("");
     const [grossSalary, setGrossSalary] = useState(250000);
     const [netSalary, setNetSalary] = useState(0);
@@ -10,7 +25,6 @@ function TaxStateProvider({children}) {
     const [frissHazasok, setFrissHazasok] = useState(false);
     const [szemelyi, setSzemelyi] = useState(0);
     const [csaladi, setCsaladi] = useState(false);
-    const [dateOfWedding, setDateOfWedding] = useState("");
     const [validMarriage, setValidMarriage] = useState(false);
     const [numOfDependents, setNumOfDependents] = useState(0);
     const [numOfEligibleDependents, setNumOfEligibleDependents] = useState(0);
@@ -63,7 +77,6 @@ function TaxStateProvider({children}) {
         if (validMarriage && frissHazasok) {
             juttatasok += 5000;
         }
-        console.log("Num of eligible dependents: ", numOfEligibleDependents)
         if (numOfEligibleDependents == 1) {
             juttatasok += 10000 * numOfDependents;
         } else if (numOfEligibleDependents == 2) {
@@ -71,8 +84,11 @@ function TaxStateProvider({children}) {
         } else if (numOfEligibleDependents >= 3) {
             juttatasok += 33000 * numOfDependents;
         }
-        console.log(juttatasok);
         setNetSalary(grossSalary - ado + juttatasok);
+    }
+
+    const changeFamilyMember = () => {
+
     }
 
     const changeName = (value) => {
@@ -80,7 +96,6 @@ function TaxStateProvider({children}) {
     }
 
     const validateMarriage = (value) => {
-        setDateOfWedding(value);
         const date = new Date(value);
         const today = new Date();
         const diff = today - date;
@@ -101,12 +116,10 @@ function TaxStateProvider({children}) {
 
     const changeNumOfDependents = (value) => {
         setNumOfDependents(value);
-        console.log(value);
     }
 
     const changeNumOfEligibleDependents = (value) => {
         setNumOfEligibleDependents(value);
-        console.log(value)
     }
 
     useEffect(() => {
