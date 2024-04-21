@@ -83,40 +83,32 @@ function TaxStateProvider({children}) {
             return;
         }
 
-        // Check if idToDelete is the last one
         const isLastOne = idToDelete === Object.keys(family).length;
 
         let newFamily;
 
         if (isLastOne) {
-            // If idToDelete is the last one, delete it from the family object
             newFamily = { ...family };
             delete newFamily[idToDelete];
         } else {
-            // If idToDelete is not the last one, create a new family object where the members that come after the deleted member are re-indexed
             newFamily = Object.keys(family).reduce((obj, key) => {
                 const id = parseInt(key);
                 if (id < idToDelete) {
-                    // If the member comes before the deleted member, keep the same index
                     obj[id] = family[key];
                 } else if (id > idToDelete) {
-                    // If the member comes after the deleted member, decrease the index by 1
                     obj[id - 1] = family[key];
                 }
                 return obj;
             }, {});
         }
 
-        // Update the family state with the new object
         setFamily(newFamily);
 
-        // If the deleted member was the current member, change the current member
         if (idToDelete === currentFamilyMember) {
             setCurrentFamilyMember(Math.max(...Object.keys(newFamily)));
         }
     }
 
-    // Add this useEffect hook in your component
     useEffect(() => {
         if (currentFamilyMember in family) {
             loadFamilyMember(currentFamilyMember);
