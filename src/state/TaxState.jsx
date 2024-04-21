@@ -43,42 +43,56 @@ function TaxStateProvider({children}) {
     const changeCurrentFamilyMember = (id) => {
         setCurrentFamilyMember(id);
         loadFamilyMember(id);
+        console.log(family[id])
     }
 
     const addFamilyMember = () => {
         const id = Math.max(...Object.keys(family)) + 1;
-        family[id] = {
-            name: "Name",
-            grossSalary: 250000,
-            netSalary: 0,
-            SZJA: 0,
-            frissHazasok: false,
-            szemelyi: 0,
-            csaladi: false,
-            validMarriage: false,
-            numOfDependents: 0,
-            numOfEligibleDependents: 0
-        };
+        setFamily(prevFamily => {
+            return {
+                ...prevFamily,
+                [id]: {
+                    name: "Name",
+                    grossSalary: 250000,
+                    netSalary: 0,
+                    SZJA: 0,
+                    frissHazasok: false,
+                    szemelyi: 0,
+                    csaladi: false,
+                    validMarriage: false,
+                    numOfDependents: 0,
+                    numOfEligibleDependents: 0
+                }
+            }
+
+        })
         setCurrentFamilyMember(id);
     }
 
     const updateFamilyMember = () => {
-        family[currentFamilyMember] = {
-            name,
-            grossSalary,
-            netSalary,
-            SZJA,
-            frissHazasok,
-            szemelyi,
-            csaladi,
-            validMarriage,
-            numOfDependents,
-            numOfEligibleDependents
-        };
+        setFamily(prevFamily => {
+            return {
+                ...prevFamily,
+                [currentFamilyMember]: {
+                    name,
+                    grossSalary,
+                    netSalary,
+                    SZJA,
+                    frissHazasok,
+                    szemelyi,
+                    csaladi,
+                    validMarriage,
+                    numOfDependents,
+                    numOfEligibleDependents
+                }
+            }
+
+        })
     }
 
     const loadFamilyMember = (id) => {
         setName(family[id].name);
+        changeName(family[id].name);
         setGrossSalary(family[id].grossSalary);
         setNetSalary(family[id].netSalary);
         setSZJA(family[id].SZJA);
@@ -88,6 +102,7 @@ function TaxStateProvider({children}) {
         setValidMarriage(family[id].validMarriage);
         setNumOfDependents(family[id].numOfDependents);
         setNumOfEligibleDependents(family[id].numOfEligibleDependents);
+        calculateNetSalary();
     }
 
     const checkBoxes = (e) => {
@@ -121,7 +136,6 @@ function TaxStateProvider({children}) {
             szja = 0;
         }
         ado += szja;
-        // let szemelyiKedvezmeny;
         if (szemelyi) {
             if (ado - 77300 < 0) {
                 ado = 0;
@@ -140,11 +154,15 @@ function TaxStateProvider({children}) {
         } else if (numOfEligibleDependents >= 3) {
             juttatasok += 33000 * numOfDependents;
         }
-        setNetSalary(grossSalary - ado + juttatasok);
+        const newNetSalary = grossSalary - ado + juttatasok;
+        if (newNetSalary !== netSalary) {
+            setNetSalary(newNetSalary);
+        }
     }
 
     const changeName = (value) => {
         setName(value);
+        updateFamilyMember(currentFamilyMember);
     }
 
     const validateMarriage = (value) => {
@@ -175,8 +193,11 @@ function TaxStateProvider({children}) {
     }
 
     useEffect(() => {
+        updateFamilyMember();
+    }, [name]);
+
+    useEffect(() => {
         calculateNetSalary();
-        updateFamilyMember(currentFamilyMember);
     }, [ grossSalary, SZJA, frissHazasok, szemelyi, csaladi, calculateNetSalary, validMarriage, checkBoxes, numOfDependents]);
 
     const context = { family, name, grossSalary, netSalary, SZJA, frissHazasok, szemelyi, csaladi, changeGrossSalary, checkBoxes, changeName, validateMarriage, validMarriage, changeGrossSalaryByPercentage, changeNumOfDependents, numOfDependents, changeNumOfEligibleDependents, numberOfFamilyMembers, addFamilyMember, changeCurrentFamilyMember };

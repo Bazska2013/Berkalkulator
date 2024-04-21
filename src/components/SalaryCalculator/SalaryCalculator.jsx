@@ -9,7 +9,7 @@ const SalaryCalculator = () => {
         ------------------------------------------------------
         Salary Calculator
         <p>Családtag neve</p>
-        <input type="text" onChange={(e) => changeName(e.target.value)} />
+        <input type="text" onChange={(e) => changeName(e.target.value)} value={name}/>
         <p>Bruttó bér</p>
         <input type="number" onChange={(e) => changeGrossSalary(e.target.value)} value={grossSalary} />
         <p>Add meg a bruttó béredet!</p>
