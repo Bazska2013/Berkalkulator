@@ -31,7 +31,7 @@ const HouseholdSummary = () => {
                   <th>Nettó bér</th>
               </tr>
               {Object.keys(family).map((id) => (
-                  <tr key={id}>
+                  <tr key={id} onClick={() => changeCurrentFamilyMember(id)}>
                       <td>{family[id]['name']}</td>
                       <td>{isNaN(family[id]['netSalary']) ? '0' : family[id]['netSalary']} Ft</td>
                   </tr>
