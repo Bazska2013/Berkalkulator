@@ -35,7 +35,6 @@ function TaxStateProvider({children}) {
         setIsUpdating(true);
         updateFamilyMember();
         setCurrentFamilyMember(id);
-        console.log(family);
     }
 
     useEffect(() => {
@@ -55,13 +54,6 @@ function TaxStateProvider({children}) {
     }
 
     const [currentFamilyMember, setCurrentFamilyMember] = useState(1);
-
-    // const changeCurrentFamilyMember = (id) => {
-    //     updateFamilyMember()
-    //     setCurrentFamilyMember(id);
-    //     loadFamilyMember(id);
-    //     console.log(family)
-    // }
 
     const addFamilyMember = () => {
         const id = Math.max(...Object.keys(family)) + 1;
@@ -87,8 +79,9 @@ function TaxStateProvider({children}) {
     }
 
     const deleteFamilyMember = (idToDelete) => {
-        // Convert idToDelete to string because keys in objects are strings
-        const idToDeleteString = idToDelete.toString();
+        if (Object.keys(family).length === 1) {
+            return;
+        }
 
         // Check if idToDelete is the last one
         const isLastOne = idToDelete === Object.keys(family).length;
@@ -131,6 +124,7 @@ function TaxStateProvider({children}) {
     }, [family]);
 
     const updateFamilyMember = () => {
+        const newNetSalary = calculateNetSalary();
         setFamily(prevFamily => {
             return {
                 ...prevFamily,
@@ -138,7 +132,7 @@ function TaxStateProvider({children}) {
                     ...prevFamily[currentFamilyMember],
                     name,
                     grossSalary,
-                    netSalary,
+                    netSalary: newNetSalary,
                     SZJA,
                     frissHazasok,
                     szemelyi,
@@ -215,14 +209,12 @@ function TaxStateProvider({children}) {
             juttatasok += 33000 * numOfDependents;
         }
         const newNetSalary = grossSalary - ado + juttatasok;
-        if (newNetSalary !== netSalary) {
-            setNetSalary(newNetSalary);
-        }
+        setNetSalary(newNetSalary);
+        return newNetSalary;
     }
 
     const changeName = (value) => {
         setName(value);
-        // updateFamilyMember(currentFamilyMember);
     }
 
     const validateMarriage = (value) => {
@@ -254,11 +246,11 @@ function TaxStateProvider({children}) {
 
     useEffect(() => {
         updateFamilyMember();
-    }, [name]);
+    }, [name, grossSalary, SZJA, frissHazasok, szemelyi, csaladi, validMarriage, numOfDependents, numOfEligibleDependents]);
 
     useEffect(() => {
         calculateNetSalary();
-    }, [ grossSalary, SZJA, frissHazasok, szemelyi, csaladi, calculateNetSalary, validMarriage, checkBoxes, numOfDependents, deleteFamilyMember]);
+    }, [ grossSalary, SZJA, frissHazasok, szemelyi, csaladi, validMarriage, checkBoxes, numOfDependents, deleteFamilyMember, netSalary]);
 
     const context = { family, name, grossSalary, netSalary, SZJA, frissHazasok, szemelyi, csaladi, changeGrossSalary, checkBoxes, changeName, validateMarriage, validMarriage, changeGrossSalaryByPercentage, changeNumOfDependents, numOfDependents, changeNumOfEligibleDependents, numberOfFamilyMembers, addFamilyMember, changeCurrentFamilyMember, deleteFamilyMember, currentFamilyMember };
     return <TaxStateContext.Provider value={context}>{children}</TaxStateContext.Provider>

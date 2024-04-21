@@ -42,7 +42,7 @@ const SalaryCalculator = () => {
           ) : null}
           <label htmlFor="csaladi">Családi kedvezmény</label>
           <h1>Számított nettó bér:</h1>
-          <p>{netSalary}</p>
+          <p>{netSalary} Ft</p>
           ------------------------------------------------------
       </>
   );
