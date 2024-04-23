@@ -151,20 +151,22 @@ function TaxStateProvider({children}) {
         }
     }
 
-    const checkBoxes = (e) => {
-        const { name, checked } = e.target;
+    const checkBoxes = (event) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
         switch (name) {
             case "SZJA":
-                setSZJA(checked);
+                setSZJA(value);
                 break;
             case "frissHazasok":
-                setFrissHazasok(checked);
+                setFrissHazasok(value);
                 break;
             case "szemelyi":
-                setSzemelyi(checked);
+                setSzemelyi(value);
                 break;
             case "csaladi":
-                setCsaladi(checked);
+                setCsaladi(value);
                 break;
             default:
                 break;

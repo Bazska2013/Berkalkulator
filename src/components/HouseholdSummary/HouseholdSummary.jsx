@@ -1,5 +1,6 @@
 import {useTaxState} from "../../state/TaxState.jsx";
 import {useEffect, useState} from "react";
+import {Table} from "react-bootstrap";
 
 const HouseholdSummary = () => {
 
@@ -24,24 +25,28 @@ const HouseholdSummary = () => {
           ---------------------------------------------------
           <h2>HouseholdSummary</h2>
           <h2>Háztartás összesített jövedelme</h2>
-          <table>
-              <tbody>
+          <Table striped bordered hover>
+              <thead>
               <tr>
                   <th>Családtag</th>
                   <th>Nettó bér</th>
               </tr>
-              {Object.keys(family).map((id) => (
-                  <tr key={id} onClick={() => changeCurrentFamilyMember(id)}>
-                      <td>{family[id]['name']}</td>
-                      <td>{isNaN(family[id]['netSalary']) ? '0' : family[id]['netSalary']} Ft</td>
-                  </tr>
-              ))}
-              <tr>
-                  <td>Összesen:</td>
-                  <td>{isNaN(totalNetSalary) ? '0' : totalNetSalary} Ft</td>
-              </tr>
+              </thead>
+              <tbody>
+                  {Object.keys(family).map((id) => (
+                      <tr key={id} onClick={() => changeCurrentFamilyMember(id)}>
+                          <td>{family[id]['name']}</td>
+                          <td>{isNaN(family[id]['netSalary']) ? '0' : family[id]['netSalary']} Ft</td>
+                      </tr>
+                  ))}
               </tbody>
-          </table>
+              <tfoot>
+                  <tr>
+                      <th>Összesen:</th>
+                      <th>{isNaN(totalNetSalary) ? '0' : totalNetSalary} Ft</th>
+                  </tr>
+              </tfoot>
+          </Table>
           ---------------------------------------------------
       </>
   );

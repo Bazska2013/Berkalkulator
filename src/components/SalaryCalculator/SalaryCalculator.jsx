@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {useTaxState} from "../../state/TaxState.jsx";
+import {Button, ButtonGroup, FloatingLabel, Form} from "react-bootstrap";
 
 const SalaryCalculator = () => {
       const {name, grossSalary, netSalary, frissHazasok, csaladi, changeName, changeGrossSalary, checkBoxes, validateMarriage, validMarriage, changeGrossSalaryByPercentage, changeNumOfDependents, numOfDependents, changeNumOfEligibleDependents, SZJA, szemelyi} = useTaxState();
@@ -8,20 +9,45 @@ const SalaryCalculator = () => {
       <>
           ------------------------------------------------------
           Salary Calculator
-          <p>Családtag neve</p>
-          <input type="text" onChange={(e) => changeName(e.target.value)} value={name}/>
-          <p>Bruttó bér</p>
-          <input type="number" onChange={(e) => changeGrossSalary(e.target.value)} value={grossSalary}/>
-          <p>Add meg a bruttó béredet!</p>
-          <input type="range" min="1" max="10000" onChange={(e) => changeGrossSalary(e.target.value * 100)} value={grossSalary / 100}/>
-          <button onClick={changeGrossSalaryByPercentage(95)}>-5%</button>
-          <button onClick={changeGrossSalaryByPercentage(99)}>-1%</button>
-          <button onClick={changeGrossSalaryByPercentage(101)}>+1%</button>
-          <button onClick={changeGrossSalaryByPercentage(105)}>+5%</button>
+          <FloatingLabel
+          controlId="nameInput"
+          label="Családtag neve"
+          className="mb-3"
+          >
+                  <Form.Control type="text" placeholder={name} onChange={(e) => changeName(e.target.value)} />
+          </FloatingLabel>
+          <FloatingLabel
+          controlId="grossInput"
+          label="Bruttó bér"
+          className="mb-3">
+                  <Form.Control type="number" placeholder={grossSalary} onChange={(e) => changeGrossSalary(e.target.value)} value={grossSalary} />
+          </FloatingLabel>
+          <Form.Label controlId="grossRange" className="mb-3">Add meg a bruttó béredet!</Form.Label>
+          <Form.Range id="grossRange" min="1" max="10000" onChange={(e) => changeGrossSalary(e.target.value * 100)} value={grossSalary / 100} />
+          <ButtonGroup aria-label="Basic example">
+                  <Button variant="secondary" onClick={changeGrossSalaryByPercentage(95)}>-5%</Button>
+                  <Button variant="secondary" onClick={changeGrossSalaryByPercentage(99)}>-1%</Button>
+                  <Button variant="secondary" onClick={changeGrossSalaryByPercentage(101)}>+1%</Button>
+                  <Button variant="secondary" onClick={changeGrossSalaryByPercentage(105)}>+5%</Button>
+          </ButtonGroup>
           <h2>Kedvezmények</h2>
-          <input type="checkbox" name="SZJA" onChange={checkBoxes} checked={SZJA === true}/>
-          <label htmlFor="SZJA">25 év alattiak SZJA mentessége</label>
-          <input type="checkbox" name="frissHazasok" onChange={checkBoxes} checked={frissHazasok === true}/>
+          <Form.Check
+          type="switch"
+          id="SZJA"
+          name="SZJA"
+          label="25 év alattiak SZJA mentessége"
+          onChange={checkBoxes}
+          checked={SZJA === true}
+          isValid={SZJA === true} />
+          <Form.Check
+          type="switch"
+          id="frissHazasok"
+          name="frissHazasok"
+          label="Friss házasok kedvezménye"
+          onChange={checkBoxes}
+          checked={frissHazasok === true}
+          isValid={validMarriage === true}
+          />
           {frissHazasok ? (
               <>
                   <input type="date" name="dateOfWedding" onChange={(e) => validateMarriage(e.target.value)}/>
