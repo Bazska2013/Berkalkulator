@@ -1,20 +1,18 @@
 import {useEffect, useState} from "react";
 import {useTaxState} from "../../state/TaxState.jsx";
-import {Button, ButtonGroup, FloatingLabel, Form} from "react-bootstrap";
+import {Button, ButtonGroup, Card, FloatingLabel, Form, InputGroup} from "react-bootstrap";
 
 const SalaryCalculator = () => {
       const {name, grossSalary, netSalary, frissHazasok, csaladi, changeName, changeGrossSalary, checkBoxes, validateMarriage, validMarriage, changeGrossSalaryByPercentage, changeNumOfDependents, numOfDependents, changeNumOfEligibleDependents, SZJA, szemelyi} = useTaxState();
 
   return (
       <>
-          ------------------------------------------------------
-          Salary Calculator
           <FloatingLabel
           controlId="nameInput"
           label="Családtag neve"
           className="mb-3"
           >
-                  <Form.Control type="text" placeholder={name} onChange={(e) => changeName(e.target.value)} />
+                  <Form.Control type="text" onChange={(e) => changeName(e.target.value)} value={name}/>
           </FloatingLabel>
           <FloatingLabel
           controlId="grossInput"
@@ -30,7 +28,7 @@ const SalaryCalculator = () => {
                   <Button variant="secondary" onClick={changeGrossSalaryByPercentage(101)}>+1%</Button>
                   <Button variant="secondary" onClick={changeGrossSalaryByPercentage(105)}>+5%</Button>
           </ButtonGroup>
-          <h2>Kedvezmények</h2>
+          <h3>Kedvezmények</h3>
           <Form.Check
           type="switch"
           id="SZJA"
@@ -46,30 +44,57 @@ const SalaryCalculator = () => {
           label="Friss házasok kedvezménye"
           onChange={checkBoxes}
           checked={frissHazasok === true}
-          isValid={validMarriage === true}
+          isValid={validMarriage === true && frissHazasok === true}
           />
           {frissHazasok ? (
               <>
-                  <input type="date" name="dateOfWedding" onChange={(e) => validateMarriage(e.target.value)}/>
+                  <Form.Control
+                  type="date"
+                  name="dateOfWedding"
+                  onChange={(e) => validateMarriage(e.target.value)}
+                  />
                   {validMarriage ? <p>Jogosult</p> : <p>Nem jogosult</p>}
               </>
           ) : null}
-          <label htmlFor="frissHazasok">Friss házasok kedvezménye</label>
-          <input type="checkbox" name="szemelyi" onChange={checkBoxes} checked={szemelyi === true}/>
-          <label htmlFor="szemelyi">Személyi adókedvezmény</label>
-          <input type="checkbox" name="csaladi" onChange={checkBoxes} checked={csaladi === true}/>
+              <Form.Check
+                  type="switch"
+                  id="szemelyi"
+                  name="szemelyi"
+                  label="Személyi adókedvezmény"
+                  onChange={checkBoxes}
+                  checked={szemelyi === true}
+                  isValid={szemelyi === true}
+              />
+              <Form.Check
+                  type="switch"
+                  id="csaladi"
+                  name="csaladi"
+                  label="Családi kedvezmény"
+                  onChange={checkBoxes}
+                  checked={csaladi === true}
+                  isValid={csaladi === true}
+              />
           {csaladi ? (
               <>
-                  <input type="number" min="1" onChange={(e) => changeNumOfDependents(e.target.value)}/>
-                  Eltartott, ebből kedvezményezett
-                  <input type="number" min="0" max={numOfDependents}
-                         onChange={(e) => changeNumOfEligibleDependents(e.target.value)}/>
+                      <InputGroup className="mb-3">
+                              <Form.Control placeholder="1" type="number" min="1" onChange={(e) => changeNumOfDependents(e.target.value)} />
+                              <InputGroup.Text id="eligibleText">
+                                      Eltartott, ebből kedvezményezett
+                              </InputGroup.Text>
+                              <Form.Control placeholder="0" type="number" min="0" max={numOfDependents} onChange={(e) => changeNumOfEligibleDependents(e.target.value)}/>
+                      </InputGroup>
               </>
           ) : null}
-          <label htmlFor="csaladi">Családi kedvezmény</label>
-          <h1>Számított nettó bér:</h1>
-          <p>{netSalary} Ft</p>
-          ------------------------------------------------------
+              <Card>
+                      <Card.Body>
+                              <Card.Title>
+                                      <h2>Számított nettó bér:</h2>
+                              </Card.Title>
+                              <Card.Text>
+                                      <h3>{netSalary} Ft</h3>
+                              </Card.Text>
+                      </Card.Body>
+              </Card>
       </>
   );
 };

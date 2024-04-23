@@ -22,8 +22,6 @@ const HouseholdSummary = () => {
 
   return (
       <>
-          ---------------------------------------------------
-          <h2>HouseholdSummary</h2>
           <h2>Háztartás összesített jövedelme</h2>
           <Table striped bordered hover>
               <thead>
@@ -47,7 +45,6 @@ const HouseholdSummary = () => {
                   </tr>
               </tfoot>
           </Table>
-          ---------------------------------------------------
       </>
   );
 };

@@ -1,10 +1,10 @@
 import HouseholdSalaryCalculator from "./components/HouseholdSalaryCalculator";
+import {Container} from "react-bootstrap";
 
 function App() {
   return (
     <div>
-      <h1>Bérkalkulátor alkalmazás</h1>
-      <HouseholdSalaryCalculator />
+        <HouseholdSalaryCalculator/>
     </div>
   );
 }
