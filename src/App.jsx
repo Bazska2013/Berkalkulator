@@ -1,5 +1,4 @@
 import HouseholdSalaryCalculator from "./components/HouseholdSalaryCalculator";
-import {Container} from "react-bootstrap";
 
 function App() {
   return (
